@@ -3,10 +3,31 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
 
 interface Props {
   content: string;
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-1.5 rounded-md hover:bg-[var(--bg-tertiary)]"
+    >
+      {copied ? <Check size={14} /> : <Copy size={14} />}
+    </button>
+  );
 }
 
 export function MarkdownRenderer({ content }: Props) {
@@ -15,49 +36,53 @@ export function MarkdownRenderer({ content }: Props) {
       remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ children }) => (
-          <h1 className="text-xl font-bold text-white mt-5 mb-2.5 tracking-tight">
+          <h1 className="text-xl font-bold text-[var(--text-primary)] mt-6 mb-3 tracking-tight leading-tight">
             {children}
           </h1>
         ),
         h2: ({ children }) => (
-          <h2 className="text-lg font-semibold text-white mt-4 mb-2 tracking-tight">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mt-5 mb-2.5 tracking-tight leading-tight">
             {children}
           </h2>
         ),
         h3: ({ children }) => (
-          <h3 className="text-[15px] font-semibold text-zinc-200 mt-3 mb-1.5">
+          <h3 className="text-[15px] font-semibold text-[var(--text-primary)] mt-4 mb-2 leading-tight">
             {children}
           </h3>
         ),
         p: ({ children }) => (
-          <p className="text-zinc-300 leading-relaxed mb-3 text-[14px]">{children}</p>
+          <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed mb-3 last:mb-0">
+            {children}
+          </p>
         ),
         strong: ({ children }) => (
-          <strong className="text-white font-semibold">{children}</strong>
+          <strong className="font-semibold text-[var(--text-primary)]">
+            {children}
+          </strong>
         ),
         em: ({ children }) => (
-          <em className="text-zinc-400 italic">{children}</em>
+          <em className="text-[var(--text-secondary)] italic">{children}</em>
         ),
         ul: ({ children }) => (
-          <ul className="list-none space-y-1.5 mb-3 text-zinc-300">
+          <ul className="space-y-1.5 mb-3 text-[14px]">
             {children}
           </ul>
         ),
         ol: ({ children }) => (
-          <ol className="list-decimal list-inside space-y-1.5 mb-3 text-zinc-300">
+          <ol className="list-decimal list-inside space-y-1.5 mb-3 text-[14px] text-[var(--text-secondary)]">
             {children}
           </ol>
         ),
         li: ({ children }) => (
-          <li className="ml-1 flex items-start gap-2">
-            <span className="text-indigo-400 mt-1.5 text-[8px]">●</span>
-            <span>{children}</span>
+          <li className="flex items-start gap-2.5 text-[var(--text-secondary)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--brand-primary)] mt-2 flex-shrink-0" />
+            <span className="flex-1">{children}</span>
           </li>
         ),
         a: ({ children, href }) => (
           <a
             href={href}
-            className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 decoration-indigo-400/30 hover:decoration-indigo-300/50 transition-colors"
+            className="text-[var(--brand-primary)] hover:text-[var(--brand-secondary)] font-medium underline underline-offset-2 decoration-[var(--brand-muted)] hover:decoration-[var(--brand-primary)] transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -65,18 +90,19 @@ export function MarkdownRenderer({ content }: Props) {
           </a>
         ),
         blockquote: ({ children }) => (
-          <blockquote className="border-l-2 border-indigo-500/50 pl-4 py-2 my-3 bg-indigo-500/5 rounded-r-lg text-zinc-400 text-[14px]">
+          <blockquote className="border-l-3 border-[var(--brand-primary)] pl-4 py-1 my-4 bg-[var(--brand-light)] rounded-r-lg text-[var(--text-secondary)] text-[14px]">
             {children}
           </blockquote>
         ),
         code: ({ children, className, ...rest }) => {
           const match = /language-(\w+)/.exec(className || "");
           const isInline = !className;
+          const codeString = String(children).replace(/\n$/, "");
 
           if (isInline) {
             return (
               <code
-                className="bg-white/[0.06] text-indigo-300 px-1.5 py-0.5 rounded text-[13px] font-mono"
+                className="bg-[var(--bg-tertiary)] text-[var(--brand-primary)] px-1.5 py-0.5 rounded-md text-[13px] font-mono font-medium"
                 {...rest}
               >
                 {children}
@@ -85,56 +111,66 @@ export function MarkdownRenderer({ content }: Props) {
           }
 
           return match ? (
-            <div className="my-3 rounded-xl overflow-hidden border border-white/[0.06]">
-              <div className="bg-white/[0.03] px-4 py-2 text-[11px] text-zinc-500 font-mono border-b border-white/[0.04] flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                <div className="w-2 h-2 rounded-full bg-green-500/50" />
-                <span className="ml-2">{match[1]}</span>
+            <div className="code-block my-4">
+              <div className="code-block-header flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <span className="text-[12px] text-[var(--text-tertiary)]">{match[1]}</span>
+                </div>
+                <CopyButton text={codeString} />
               </div>
               <SyntaxHighlighter
-                style={oneDark}
+                style={oneLight}
                 language={match[1]}
                 PreTag="div"
                 customStyle={{
                   margin: 0,
                   borderRadius: 0,
-                  fontSize: "0.8125rem",
-                  background: "rgba(0,0,0,0.3)",
+                  fontSize: "13px",
+                  background: "var(--bg-secondary)",
+                  padding: "14px",
                 }}
               >
-                {String(children).replace(/\n$/, "")}
+                {codeString}
               </SyntaxHighlighter>
             </div>
           ) : (
-            <code className="bg-white/[0.06] text-indigo-300 px-1.5 py-0.5 rounded text-[13px] font-mono block p-3 overflow-x-auto">
-              {children}
+            <code className="code-block">
+              <code className="code-block-content font-mono">
+                {children}
+              </code>
             </code>
           );
         },
         table: ({ children }) => (
-          <div className="my-4 overflow-x-auto rounded-xl border border-white/[0.06]">
+          <div className="my-4 overflow-x-auto rounded-xl border border-[var(--border-light)]">
             <table className="w-full text-[13px]">{children}</table>
           </div>
         ),
         thead: ({ children }) => (
-          <thead className="bg-white/[0.03] border-b border-white/[0.06]">{children}</thead>
+          <thead className="bg-[var(--bg-tertiary)] border-b border-[var(--border-light)]">
+            {children}
+          </thead>
         ),
         tbody: ({ children }) => (
-          <tbody className="divide-y divide-white/[0.04]">{children}</tbody>
+          <tbody className="divide-y divide-[var(--border-light)]">{children}</tbody>
         ),
         tr: ({ children }) => (
-          <tr className="hover:bg-white/[0.02] transition-colors">{children}</tr>
+          <tr className="hover:bg-[var(--bg-secondary)] transition-colors">{children}</tr>
         ),
         th: ({ children }) => (
-          <th className="px-4 py-2.5 text-left text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+          <th className="px-4 py-3 text-left text-[11px] font-semibold text-[var(--text-tertiary)] uppercase tracking-wider">
             {children}
           </th>
         ),
         td: ({ children }) => (
-          <td className="px-4 py-2.5 text-zinc-300">{children}</td>
+          <td className="px-4 py-3 text-[var(--text-secondary)]">{children}</td>
         ),
-        hr: () => <hr className="border-white/[0.06] my-5" />,
+        hr: () => <hr className="border-[var(--border-light)] my-6" />,
       }}
     >
       {content}
