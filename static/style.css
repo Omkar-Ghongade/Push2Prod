@@ -1,0 +1,260 @@
+/* TraceTalk — minimal intentional styling per spec §5 */
+
+:root {
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --bg: #0f1117;
+  --bg-card: #1a1d27;
+  --bg-input: #252833;
+  --text: #e2e4ea;
+  --text-dim: #8b8fa3;
+  --border: #2a2d3a;
+  --error: #ef4444;
+  --warn: #eab308;
+  --deploy: #22c55e;
+  --mono: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  height: 100vh;
+}
+
+/* ── Chat pane ─────────────────────────────────────────────────────── */
+#chat-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+}
+
+#chat-header {
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--accent-light);
+}
+
+#chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  line-height: 1.5;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.msg.user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.msg.assistant {
+  align-self: flex-start;
+  background: var(--bg-card);
+  border-bottom-left-radius: 4px;
+}
+
+.msg.assistant .evidence {
+  display: block;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.msg.investigating {
+  align-self: flex-start;
+  background: none;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-style: italic;
+  padding: 4px 0;
+}
+
+#chat-input-area {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+#chat-input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+#chat-input:focus {
+  border-color: var(--accent);
+}
+
+#send-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#send-btn:hover { background: var(--accent-light); }
+#send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Side panel ────────────────────────────────────────────────────── */
+#side-panel {
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+}
+
+#panel-header {
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+#panel-narration {
+  padding: 12px 20px;
+  font-size: 13px;
+  color: var(--accent-light);
+  min-height: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+#panel-visual {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+/* ── Log lines ─────────────────────────────────────────────────────── */
+.log-line {
+  padding: 3px 0;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.log-line .ts { color: var(--text-dim); }
+.log-line .svc { color: var(--accent-light); }
+.log-line .lvl-ERROR { color: var(--error); font-weight: 700; }
+.log-line .lvl-WARN { color: var(--warn); font-weight: 700; }
+.log-line .lvl-DEPLOY { color: var(--deploy); font-weight: 700; }
+.log-line .lvl-INFO { color: var(--text-dim); }
+.log-line .highlight { background: rgba(99, 102, 241, 0.3); border-radius: 2px; }
+
+/* ── Trace waterfall ───────────────────────────────────────────────── */
+.waterfall { width: 100%; }
+.wf-row {
+  display: flex;
+  align-items: center;
+  margin: 4px 0;
+  font-size: 12px;
+}
+.wf-svc {
+  width: 120px;
+  text-align: right;
+  padding-right: 10px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.wf-bar-container {
+  flex: 1;
+  height: 20px;
+  position: relative;
+}
+.wf-bar {
+  position: absolute;
+  height: 100%;
+  border-radius: 3px;
+  min-width: 2px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  font-size: 11px;
+  color: #fff;
+}
+.wf-bar.ok { background: var(--accent); }
+.wf-bar.error, .wf-bar.timeout { background: var(--error); }
+
+/* ── Service graph ─────────────────────────────────────────────────── */
+.graph-svg {
+  width: 100%;
+  height: 280px;
+}
+.graph-node {
+  fill: var(--bg-input);
+  stroke: var(--border);
+  stroke-width: 2;
+}
+.graph-node.highlighted {
+  fill: rgba(99, 102, 241, 0.2);
+  stroke: var(--accent);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
+}
+.graph-label {
+  fill: var(--text);
+  font-size: 12px;
+  font-family: var(--mono);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.graph-edge {
+  stroke: var(--border);
+  stroke-width: 2;
+  fill: none;
+  marker-end: url(#arrowhead);
+}
+
+/* ── Metrics chart ─────────────────────────────────────────────────── */
+.chart-canvas {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+/* ── Placeholder ───────────────────────────────────────────────────── */
+.placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+  text-align: center;
+  padding-top: 60px;
+}

@@ -1,0 +1,16 @@
+{
+  "edges": [
+    {
+      "from": "api-gateway",
+      "to": "cart-service"
+    },
+    {
+      "from": "cart-service",
+      "to": "payment-service"
+    },
+    {
+      "from": "payment-service",
+      "to": "inventory-service"
+    }
+  ]
+}

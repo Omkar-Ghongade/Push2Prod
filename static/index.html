@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceTalk</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Left: Chat pane -->
+    <div id="chat-pane">
+      <div id="chat-header">TraceTalk</div>
+      <div id="chat-messages"></div>
+      <div id="chat-input-area">
+        <input id="chat-input" type="text" placeholder="Ask about system behavior..."
+               autocomplete="off" autofocus>
+        <button id="send-btn" aria-label="Send">&#9654;</button>
+      </div>
+    </div>
+
+    <!-- Right: Side panel -->
+    <div id="side-panel">
+      <div id="panel-header">Investigation</div>
+      <div id="panel-narration"></div>
+      <div id="panel-visual"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
