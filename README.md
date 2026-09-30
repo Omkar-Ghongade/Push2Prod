@@ -456,7 +456,7 @@ Before running TraceTalk, make sure you have:
 | --- | --- |
 | Python | 3.13 or later |
 | Node.js | 18 or later |
-| Anthropic API Key | Required for Claude |
+| OpenRouter API Key | Required for open-source models |
 | OpenObserve | Running locally or on an accessible host |
 | OpenObserve Telemetry | Logs, metrics, and/or traces available for investigation |
 
@@ -466,10 +466,10 @@ Before running TraceTalk, make sure you have:
 
 ## 1. Configure Environment Variables
 
-Set your Anthropic API key:
+Set your OpenRouter API key:
 
 ```bash
-export ANTHROPIC_API_KEY="sk-ant-your-key-here"
+export OPENROUTER_API_KEY="sk-or-your-key-here"
 ```
 
 Configure OpenObserve:
@@ -543,7 +543,7 @@ You should see the investigation unfold in the UI as TraceTalk queries the avail
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | Required | API key used to access Claude. |
+| `OPENROUTER_API_KEY` | Required | API key used to access OpenRouter. |
 | `OO_BASE_URL` | `http://localhost:5080` | OpenObserve server URL. |
 | `OO_ORG` | `default` | OpenObserve organization. |
 | `ZO_ROOT_USER_EMAIL` | Required | OpenObserve authentication username. |

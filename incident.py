@@ -76,9 +76,9 @@ DESTINATION = os.getenv(
     "lab_webhook"
 )
 
-METRICS_PER_SECOND = 1000
-LOGS_PER_SECOND = 100
-TRACES_PER_SECOND = 10
+METRICS_PER_SECOND = 100000
+LOGS_PER_SECOND = 100000
+TRACES_PER_SECOND = 100000
 
 
 # =============================================================

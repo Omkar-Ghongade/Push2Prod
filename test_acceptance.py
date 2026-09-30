@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Acceptance criteria tests — Spec 05 (OpenObserve + relative timestamps).
 
-Run with ANTHROPIC_API_KEY set:
-    export ANTHROPIC_API_KEY=sk-ant-...
+Run with OPENROUTER_API_KEY set:
+    export OPENROUTER_API_KEY=sk-or-...
     python3 test_acceptance.py
 """
 
